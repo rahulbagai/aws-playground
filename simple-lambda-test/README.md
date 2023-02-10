@@ -27,7 +27,8 @@ aws --version
 3. Go inside the user and under Permissions, click "Add inline policy" from the dropdown.
 4. In the JSON editor, create a policy with the following content, giving it a name of "lambda-access-all":
 
-```{
+```
+{
 "Version": "2012-10-17",
 "Statement": [
     {
@@ -39,7 +40,8 @@ aws --version
         "Resource": "arn:aws:lambda:*:*:*"
     }
     ]
-}```
+}
+```
 
 ## Built With
 
