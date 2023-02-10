@@ -24,37 +24,37 @@ aws --version
 ```
 
 * To configure the AWS CLI, follow these steps:
-1. Go to the AWS IAM Users console and click on the "Add users" button.
-2. Give the new user a name and keep all other settings as is, and Create User.
-3. Go inside the user and under Permissions policies, click "Add inline policy" from the dropdown.
-4. In the JSON editor, create a policy with the following content, giving it a name of "lambda-access-all":
-```
-{
-    "Version": "2012-10-17",
-    "Statement": [
-        {
-            "Sid": "FullAccess",
-            "Effect": "Allow",
-            "Action": [
-                "*"
-            ],
-            "Resource": "*"
-        }
-    ]
-}
-```
-5. Go to the "Security Credentials" section and Under "Access Keys", Click on the "Create Access Key" button.
-6. Use the Command Line Interface (CLI) and move to the Next.
-7. Give a tag value if you want to and press Create access key.
-8. Copy and paste Access Key and Secret Key or Download .csv file.
-9. Open a terminal window, Run the command `aws configure`. Enter the following information when prompted:
-```
-AWS Access Key ID: *****************
-AWS Secret Access Key: ****************
-Default region name: us-west-2
-Default output format: json
-```
-10.  The configuration is stored in `~/.aws/credentials`. The AWS CLI is now configured and ready to use.
+    1. Go to the AWS IAM Users console and click on the "Add users" button.
+    2. Give the new user a name and keep all other settings as is, and Create User.
+    3. Go inside the user and under Permissions policies, click "Add inline policy" from the dropdown.
+    4. In the JSON editor, create a policy with the following content, giving it a name of "lambda-access-all":
+    ```
+    {
+        "Version": "2012-10-17",
+        "Statement": [
+            {
+                "Sid": "FullAccess",
+                "Effect": "Allow",
+                "Action": [
+                    "*"
+                ],
+                "Resource": "*"
+            }
+        ]
+    }
+    ```
+    5. Go to the "Security Credentials" section and Under "Access Keys", Click on the "Create Access Key" button.
+    6. Use the Command Line Interface (CLI) and move to the Next.
+    7. Give a tag value if you want to and press Create access key.
+    8. Copy and paste Access Key and Secret Key or Download .csv file.
+    9. Open a terminal window, Run the command `aws configure`. Enter the following information when prompted:
+    ```
+    AWS Access Key ID: *****************
+    AWS Secret Access Key: ****************
+    Default region name: us-west-2
+    Default output format: json
+    ```
+    10.  The configuration is stored in `~/.aws/credentials`. The AWS CLI is now configured and ready to use.
 
 ## Built With
 
