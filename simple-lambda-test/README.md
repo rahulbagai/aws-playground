@@ -5,7 +5,8 @@ The project is a simple example of how to use AWS Lambda service to run Java cod
 ### Prerequisites
 
 * This project was built and deployed through Github Codespaces, so Java must be installed on the Codespaces. 
-* The project was built using Maven. To generate the Maven project, use the following command: mvn archetype:generate -DgroupId=com.aws.lambda -DartifactId=simple-lambda-test -DinteractiveMode=false
+* The project was built using Maven. To generate the Maven project, use the following command: 
+`mvn archetype:generate -DgroupId=com.aws.lambda -DartifactId=simple-lambda-test -DinteractiveMode=false`
 
 ### Installing
 
@@ -27,19 +28,18 @@ aws --version
 2. Give the new user a name and keep all other settings as is, and Create User.
 3. Go inside the user and under Permissions policies, click "Add inline policy" from the dropdown.
 4. In the JSON editor, create a policy with the following content, giving it a name of "lambda-access-all":
-
 ```
 {
-"Version": "2012-10-17",
-"Statement": [
-    {
-        "Sid": "LambdaFullAccess",
-        "Effect": "Allow",
-        "Action": [
-            "lambda:*"
-        ],
-        "Resource": "arn:aws:lambda:*:*:*"
-    }
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "FullAccess",
+            "Effect": "Allow",
+            "Action": [
+                "*"
+            ],
+            "Resource": "*"
+        }
     ]
 }
 ```
@@ -54,17 +54,33 @@ AWS Secret Access Key: ****************
 Default region name: us-west-2
 Default output format: json
 ```
-10.  The configuration is stored in `~/.aws/configure`. The AWS CLI is now configured and ready to use.
+10.  The configuration is stored in `~/.aws/credentials`. The AWS CLI is now configured and ready to use.
 
 ## Built With
 
-* To build the project, use the command `mvn clean package`, which compiles the code, runs any tests, and packages the code and any dependencies into a JAR file that can be deployed to AWS Lambda.
+* To build the project `simple-lambda-test`, use the command `mvn clean package` inside simple-lambda-test directory, which compiles the code, runs any tests, and packages the code and any dependencies into a JAR file that can be deployed to AWS Lambda.
 
 ## Deployment
 
-To deploy the project, follow these steps:
-1. Go to the AWS Lambda console and create a new function using the "Author from Scratch" template.
-2. Give the function a name of "simpleLambdaTest" and select Java 8 as the runtime.
-3. Once the function is created, go to the function's settings and update the Handler to `com.aws.lambda.LambdaFunction` under Runtime settings.
-4. In the terminal, run the command `aws lambda update-function-code --function-name simpleLambdaTest --zip-file fileb://target/simple-lambda-test-1.0-SNAPSHOT.jar` to upload the code to AWS Lambda.
-5. Finally, invoke the function using the command `aws lambda invoke --function-name simpleLambdaTest output.txt`.
+```
+# Create the execution role for the function
+aws iam create-role --role-name my_lambda_role --assume-role-policy-document file://lambda_execution_role.json
+
+# Attach the basic Lambda permissions policy to the role
+aws iam attach-role-policy --role-name my_lambda_role --policy-arn arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+
+# Get the ARN of the role
+ROLE_ARN=$(aws iam get-role --role-name my_lambda_role --query "Role.Arn" --output text)
+
+# Create the function
+aws lambda create-function --function-name SimpleLambdaTest --runtime java8 --handler com.aws.lambda.LambdaFunction --role $ROLE_ARN --zip-file fileb://target/simple-lambda-test-1.0-SNAPSHOT.jar
+
+# If the function already exist, to update the function
+aws lambda update-function-code --function-name SimpleLambdaTest --zip-file fileb://target/simple-lambda-test-1.0-SNAPSHOT.jar
+
+# Invoke the function
+aws lambda invoke --function-name SimpleLambdaTest output.txt
+
+# Check the output
+cat output.txt
+```
