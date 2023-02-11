@@ -1,10 +1,12 @@
 package com.aws.apigateway;
 
+import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyRequestEvent;
+
 class ResponseBody {
     private String message;
-    private APIGaatewayProxyRequestEvent event;
+    private APIGatewayProxyRequestEvent event;
 
-    public ResponseBody(String message, APIGaatewayProxyRequestEvent event) {
+    public ResponseBody(String message, APIGatewayProxyRequestEvent event) {
         this.message = message;
         this.event = event;
     }

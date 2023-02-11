@@ -14,7 +14,7 @@ public class APIGatewayLambdaFunction implements RequestHandler<APIGatewayProxyR
     private Gson gson = new Gson();
     
     @Override
-    public String handleRequest(APIGatewayProxyRequestEvent request, Context context) {
+    public APIGatewayProxyResponseEvent handleRequest(APIGatewayProxyRequestEvent request, Context context) {
         LOGGER.info("request: " + gson.toJson(request));
 
         Map<String, String> queryStringParameters = request.getQueryStringParameters();
@@ -28,7 +28,6 @@ public class APIGatewayLambdaFunction implements RequestHandler<APIGatewayProxyR
         int responseCode = 200;
 
         if(queryStringParameters != null && !queryStringParameters.isEmpty()) {
-
             if(!queryStringParameters.get("name").isEmpty()) {
                 LOGGER.info("Received name: " + queryStringParameters.get("name"));
                 name = queryStringParameters.get("name");
@@ -44,13 +43,13 @@ public class APIGatewayLambdaFunction implements RequestHandler<APIGatewayProxyR
             day = headers.get("day");
         }
 
-        // if(body != null && !body.isEmpty()) {
-        //     RequestBody body = gson.fromJson(body, RequestBody.class);
-        //     time = body.getTime();
-        // }
+        if(body != null && !body.isEmpty()) {
+            RequestBody requestBody = gson.fromJson(body, RequestBody.class);
+            time = requestBody.getTime();
+        }
 
         String greeting = String.format("Good %s, %s of %s.", time, name, city);
-        if(!day.isEmpty()) {
+        if(day != null && !day.isEmpty()) {
             greeting += String.format(" Happy %s!", day);
         }
 
