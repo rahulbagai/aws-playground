@@ -1,6 +1,6 @@
 # Simple Lambda Test
 
-The project is a simple example of how to use AWS Lambda service to run Java code. It showcases the steps involved in deploying a Java-based Lambda function to AWS, testing it from the terminal, and granting access to the necessary resources through the AWS cli.
+This project provides a hands-on example of utilizing the AWS Lambda service to run Java code. It demonstrates the steps necessary to deploy a Java-based Lambda function, test it, and provide access to necessary resources through the AWS CLI.
 
 ### Prerequisites
 
