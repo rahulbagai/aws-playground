@@ -2,7 +2,7 @@
   "image": "mcr.microsoft.com/devcontainers/universal:2",
   "features": {
     "ghcr.io/devcontainers/features/java:1": {},
-    "ghcr.io/devcontainers/features/aws-cli:1": {},
-    "ghcr.io/devcontainers-contrib/features/maven-sdkman:2": {}
+    "ghcr.io/devcontainers-contrib/features/maven-sdkman:2": {},
+    "ghcr.io/devcontainers-contrib/features/jest:2": {}
   }
 }
