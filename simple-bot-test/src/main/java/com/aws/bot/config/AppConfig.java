@@ -1,21 +1,35 @@
+package com.aws.bot.config;
+
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
 
 public class AppConfig {
-
-    private String slackSigningSecret;
-    private String slackToken;
-    private String witToken;
+    private String dynamodbTableName;
+    private String dynamodbAccessKey;
+    private String dynamodbSecretKey;
+    private String dynamodbRegionName;
 
     public AppConfig() {
         Config config = ConfigFactory.load();
-        String slackSigningSecret = config.getString("slack.signingSecret");
-        String slackToken = config.getString("slack.token");
-        String witToken = config.getString("wit.token");
+        dynamodbTableName = config.getString("dynamodb.tablename");
+        dynamodbAccessKey = config.getString("dynamodb.access_key");
+        dynamodbSecretKey = config.getString("dynamodb.secret_key");
+        dynamodbRegionName = config.getString("dynamodb.region_name");
     }
 
-    public getSlackSigningSecret() {
-        return slackSigningSecret;
+    public String getDynamodbTableName() {
+        return dynamodbTableName;
     }
 
+    public String getDynamodbAccessKey() {
+        return dynamodbAccessKey;
+    }
+
+    public String getDynamodbSecretKey() {
+        return dynamodbSecretKey;
+    }
+
+    public String getDynamodbRegionName() {
+        return dynamodbRegionName;
+    }
 }
