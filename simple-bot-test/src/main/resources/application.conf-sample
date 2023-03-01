@@ -1,0 +1,6 @@
+dynamodb {
+    tablename = "PASTE_DYNAMODB_TABLE_NAME_HERE"
+    access_key = "PASTE_DYNAMODB_ACCESS_KEY_HERE"
+    secret_key = "PASTE_DYNAMODB_SECRET_KEY_HERE"
+    region_name = "PASTE_DYNAMODB_REGION_NAME_HERE"
+}
