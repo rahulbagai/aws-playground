@@ -17,7 +17,8 @@
 			"extensions": [
 				"vscjava.vscode-java-pack",
 				"gencay.vscode-chatgpt",
-				"redhat.java@1.14.0"
+				"redhat.java@1.14.0",
+				"redhat.vscode-xml"
 			]
 		}
 	}

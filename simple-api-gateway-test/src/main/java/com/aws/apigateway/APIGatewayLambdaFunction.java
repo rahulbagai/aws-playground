@@ -25,8 +25,6 @@ public class APIGatewayLambdaFunction implements RequestHandler<APIGatewayProxyR
         String city = "World";
         String time = "day";
         String day = "";
-        int responseCode = 200;
-
         if(queryStringParameters != null && !queryStringParameters.isEmpty()) {
             if(!queryStringParameters.get("name").isEmpty()) {
                 LOGGER.info("Received name: " + queryStringParameters.get("name"));
