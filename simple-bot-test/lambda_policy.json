@@ -1,0 +1,19 @@
+{
+    "Version": "2012-10-17",
+    "Statement": [ 
+        { 
+            "Action": ["dynamodb:GetItem","dynamodb:PutItem","dynamodb:Query","dynamodb:Scan"],
+            "Effect": "Allow",
+            "Resource": "arn:aws:dynamodb:us-west-2:413387741911:table/contacts"
+        },
+        {
+            "Effect": "Allow",
+            "Action": [
+                "logs:CreateLogGroup",
+                "logs:CreateLogStream",
+                "logs:PutLogEvents"
+            ],
+            "Resource": "*"
+        }
+    ]
+}

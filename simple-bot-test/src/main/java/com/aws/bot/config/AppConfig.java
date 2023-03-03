@@ -9,6 +9,7 @@ public class AppConfig {
     private String dynamodbAccessKey;
     private String dynamodbSecreetKey;
     private String dynamodbRegionName;
+    private boolean isOffline;
 
     public AppConfig() {
         Config config = ConfigFactory.load();
@@ -16,6 +17,7 @@ public class AppConfig {
         dynamodbAccessKey = config.getString("dynamodb.accesskey");
         dynamodbSecreetKey = config.getString("dynamodb.secretkey");
         dynamodbRegionName = config.getString("dynamodb.regionname");
+        isOffline = config.getBoolean("is_offline");
     }
 
     public String getDynamodbTableName() {
@@ -32,5 +34,9 @@ public class AppConfig {
 
     public String getDynamodbRegionName() {
         return dynamodbRegionName;
+    }
+
+    public boolean getIsOffline() {
+        return isOffline;
     }
 }
