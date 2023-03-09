@@ -13,10 +13,10 @@ dynamodb_table_name="contacts"
 account_id=$(aws sts get-caller-identity --query 'Account' --output text)
 
 # Create Dynamodb table - Capacity Mode OnDemand
-aws dynamodb create-table --table-name $dynamodb_table_name --attribute-definitions AttributeName=name,AttributeType=S --key-schema AttributeName=name,KeyType=HASH --region us-west-2 --provisioned-throughput ReadCapacityUnits=1,WriteCapacityUnits=1
+aws dynamodb create-table --table-name $dynamodb_table_name --attribute-definitions AttributeName=id,AttributeType=S --key-schema AttributeName=id,KeyType=HASH --region us-west-2 --provisioned-throughput ReadCapacityUnits=1,WriteCapacityUnits=1
 
 # Create Sample Dynamodb Item
-aws dynamodb put-item --table-name $dynamodb_table_name --item '{"name": {"S": "John Doe"},"email": {"S": "john.doe@example.com"},"phone": {"S": "+1 (212) 555-1234"}}'
+aws dynamodb put-item --table-name $dynamodb_table_name --item '{"id": {"S": "123"}, "name": {"S": "John Doe"},"email": {"S": "john.doe@example.com"},"phone": {"S": "+1 (212) 555-1234"}}'
 
 # Create the execute role for the function
 aws iam create-role --role-name $lambda_role_name --assume-role-policy-document file://lambda_execution_role.json
