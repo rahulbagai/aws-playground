@@ -31,16 +31,21 @@ aws iam attach-role-policy --role-name $lambda_role_name --policy-arn arn:aws:ia
 ROLE_ARN=arn:aws:iam::$account_id:role/$lambda_role_name
 
 # Create the Lambda function
-aws lambda create-function --function-name $lambda_function_name --runtime java11 --handler com.aws.bot.api.ListContacts --role $ROLE_ARN --zip-file fileb://target/simple-bot-test-1.0-SNAPSHOT.jar
+aws lambda create-function --function-name $lambda_function_name --runtime java11 --handler com.aws.bot.api.ListContacts --role $ROLE_ARN --zip-file fileb://target/simple-bot-test-1.0-SNAPSHOT.jar --timeout 900 --memory-size 512
 
 # Update the Lambda function, if the function already exists
 aws lambda update-function-code --function-name $lambda_function_name --zip-file fileb://target/simple-bot-test-1.0-SNAPSHOT.jar
 
-# Invoke the Lambda function
+# Invoke the Lambda function - List Contacts
 payload='{"headers":{"Content-Type":"application/json"}}'
+payload='{"httpMethod":"GET","path":"/contacts","headers":{"Content-Type":"application/json"}}'
 encoded_payload=$(echo -n $payload | base64)
-aws lambda invoke --function-name $lambda_function_name --payload "$encoded_payload" output.txt
-cat output.txt
+aws lambda invoke --function-name $lambda_function_name --payload "$encoded_payload" /dev/stdout
+
+# Invoke the Lambda function - Create Contact
+payload='{"httpMethod":"POST","path":"/contacts","headers":{"Content-Type":"application/json"},"body": "{\"name\":\"John Doe\", \"email\":\"johndoe@example.com\", \"phone\":\"123456789\"}"}'
+encoded_payload=$(echo -n $payload | base64)
+aws lambda invoke --function-name $lambda_function_name --payload "$encoded_payload" /dev/stdout
 ```
 
 ## Delete the resources
