@@ -3,6 +3,9 @@ package com.aws.bot.api;
 import java.util.Collections;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.LambdaLogger;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
@@ -12,27 +15,30 @@ import com.aws.bot.dao.Contact;
 import com.aws.bot.services.DynamoDBService;
 import com.google.gson.Gson;
 
-public class ListContacts implements RequestHandler<APIGatewayProxyRequestEvent, APIGatewayProxyResponseEvent> {
+public class APILambda implements RequestHandler<APIGatewayProxyRequestEvent, APIGatewayProxyResponseEvent> {
 
-    DynamoDBService dynamoDBService;
-    Gson gson = new Gson();
+    private final DynamoDBService dynamoDBService = new DynamoDBService();
+    private final SlackBot slackBot = new SlackBot();
+    private final Gson gson = new Gson();
+    private static final Logger LOGGER = LoggerFactory.getLogger(APILambda.class);
 
-    public ListContacts() {
-        this.dynamoDBService = new DynamoDBService();
-    }
+    public APIGatewayProxyResponseEvent handleRequest(APIGatewayProxyRequestEvent request, Context context) {
+        LOGGER.debug("request: " + gson.toJson(request));
 
-    public APIGatewayProxyResponseEvent handleRequest(APIGatewayProxyRequestEvent input, Context context) {
-        LambdaLogger logger = context.getLogger();
-        logger.log("request: " + gson.toJson(input));
-
-        String httpMethod = input.getHttpMethod();
-        String path = input.getPath();
+        String httpMethod = request.getHttpMethod();
+        String path = request.getPath();
+        LOGGER.debug(null, "HTTP Method: {}, Path: {}", httpMethod, path);
 
         if(httpMethod.equals("GET") && path.equals("/contacts")) {
-            return listContacts(input);
-        } else if(httpMethod.equals("POST") && path.equals("/contacts")) {
-            return createContact(input);
-        } else {
+            return listContacts(request);
+        } 
+        else if(httpMethod.equals("POST") && path.equals("/contacts")) {
+            return createContact(request);
+        } 
+        else if (httpMethod.equals("POST") && path.equals("/slackbotevents")) {
+            return slackBot.handleEvent(request, context);
+        }
+        else {
             return new APIGatewayProxyResponseEvent()
             .withStatusCode(404)
             .withBody("Not found");

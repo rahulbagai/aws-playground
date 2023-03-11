@@ -10,20 +10,26 @@
   <url>http://maven.apache.org</url>
   <dependencyManagement>
     <dependencies>
-       <dependency>
-         <groupId>software.amazon.awssdk</groupId>
-         <artifactId>bom</artifactId>
-         <version>2.18.10</version>
-         <type>pom</type>
-         <scope>import</scope>
-       </dependency>
+      <dependency>
+        <groupId>software.amazon.awssdk</groupId>
+        <artifactId>bom</artifactId>
+        <version>2.18.10</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
     </dependencies>
-   </dependencyManagement>
+  </dependencyManagement>
   <dependencies>
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
       <version>4.12</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter-api</artifactId>
+      <version>5.9.2</version>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -60,6 +66,22 @@
       <version>5.1.1</version>
       <scope>test</scope>
     </dependency>
+    <dependency>
+      <groupId>com.slack.api</groupId>
+      <artifactId>bolt</artifactId>
+      <version>1.28.0</version>
+    </dependency>
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-api</artifactId>
+      <version>2.0.6</version>
+    </dependency>
+    <dependency>
+      <groupId>ch.qos.logback</groupId>
+      <artifactId>logback-classic</artifactId>
+      <version>1.4.5</version>
+      <scope>runtime</scope>
+    </dependency>
   </dependencies>
   <build>
     <plugins>
@@ -89,7 +111,7 @@
               <transformers>
                 <transformer
                   implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                  <mainClass>com.aws.bot.api.ListContacts</mainClass>
+                  <mainClass>com.aws.bot.api.APILambda</mainClass>
                 </transformer>
               </transformers>
             </configuration>
