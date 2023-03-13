@@ -1,0 +1,12 @@
+<configuration>
+    <!-- Console appender -->
+    <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%-5p [%t] [%c{1}] [%X{AWSRequestId:-NA}] %m%n</pattern>
+        </encoder>
+    </appender>
+
+    <root level="DEBUG">
+        <appender-ref ref="console" />
+    </root>
+</configuration>

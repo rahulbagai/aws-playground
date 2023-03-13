@@ -1,52 +1,78 @@
 package com.aws.bot.services;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 import com.aws.bot.config.AppConfig;
+import com.aws.bot.dao.Contact;
 
-import com.amazonaws.services.dynamodbv2.*;
-import com.amazonaws.services.dynamodbv2.model.*;
+import software.amazon.awssdk.enhanced.dynamodb.DynamoDbEnhancedClient;
+import software.amazon.awssdk.enhanced.dynamodb.DynamoDbTable;
+import software.amazon.awssdk.enhanced.dynamodb.TableSchema;
+import software.amazon.awssdk.services.dynamodb.DynamoDbClient;
+import software.amazon.awssdk.services.dynamodb.model.DynamoDbException;
 
 public class DynamoDBService {
-    private AmazonDynamoDBClient client;
-    private String tableName;
 
-    public DynamoDBService(AmazonDynamoDBClient client) {
-        this.client = client;
-        
+    private DynamoDbEnhancedClient enhancedClient;
+    private DynamoDbTable<Contact> table;
+
+    public DynamoDBService() {
         AppConfig appConfig = new AppConfig();
-        tableName = appConfig.getDynamodbTableName();
+        DynamoDbClient ddb = DynamoDbClient.builder().build();
+        enhancedClient = DynamoDbEnhancedClient.builder().dynamoDbClient(ddb).build();
+        table = enhancedClient.table(appConfig.getDynamodbTableName(), TableSchema.fromBean(Contact.class));
     }
 
-    public void writeItem(String name, String email, String phone) {
-        Map<String, AttributeValue> item_values = new HashMap<>();
-        item_values.put("name", new AttributeValue().withS(name));
-        item_values.put("email", new AttributeValue().withS(email));
-        item_values.put("phone", new AttributeValue().withS(phone));
-
-        PutItemRequest request = new PutItemRequest().withTableName(tableName).withItem(item_values);
-        client.putItem(request);
+    public DynamoDBService(DynamoDbEnhancedClient enhancedClient) {
+        AppConfig appConfig = new AppConfig();
+        table = enhancedClient.table(appConfig.getDynamodbTableName(), TableSchema.fromBean(Contact.class));
     }
 
-    public List<Map<String, String>> listItems() {
-        ScanRequest scanRequest = new ScanRequest().withTableName(tableName);
+    public DynamoDBService(DynamoDbTable<Contact> table) {
+        this.table = table;
+    }
 
-        ScanResult scanResult = client.scan(scanRequest);
-        List<Map<String, AttributeValue>> results = scanResult.getItems();
+    public void writeContact(String name, String email, String phone) {
+        try {
+            Contact c = new Contact(name, email, phone, generateId(name, email, phone));
+            table.putItem(c);
+        } catch(DynamoDbException e) {
+            e.printStackTrace();
+        }
+    }
 
-        List<Map<String, String>> items = new ArrayList<>();
-        for(Map<String, AttributeValue> res : results) {
-            Map<String, String> data = new HashMap<>();
-            data.put("name", res.get("name").getS());
-            data.put("email", res.get("email").getS());
-            data.put("phone", res.get("phone").getS());
-            
-            items.add(data);
+    public List<Contact> listContacts() {
+        List<Contact> contacts = new ArrayList<>();
+
+        Iterator<Contact> it = table.scan().items().iterator();
+        while(it.hasNext()) {
+            contacts.add(it.next());
         }
 
-        return items;
+        return contacts;
+    }
+
+    /*
+     * Generate a unique id for the contact
+     */
+    private String generateId(String name, String email, String phone) {
+        String input = name + email + phone;
+
+        try {
+            MessageDigest md = MessageDigest.getInstance("MD5");
+            byte[] messageDigest = md.digest(input.getBytes());
+            StringBuilder sb = new StringBuilder();
+            for (byte b : messageDigest) {
+                sb.append(String.format("%02x", b));
+            }    
+            return sb.toString();
+        } catch(NoSuchAlgorithmException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 }

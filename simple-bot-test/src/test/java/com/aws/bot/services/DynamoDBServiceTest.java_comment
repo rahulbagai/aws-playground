@@ -1,0 +1,74 @@
+package com.aws.bot.services;
+
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.List;
+
+import org.junit.Before;
+import org.junit.Test;
+
+import com.aws.bot.config.AppConfig;
+import com.aws.bot.dao.Contact;
+
+import software.amazon.awssdk.core.pagination.sync.SdkIterable;
+import software.amazon.awssdk.enhanced.dynamodb.DynamoDbEnhancedClient;
+import software.amazon.awssdk.enhanced.dynamodb.DynamoDbTable;
+import software.amazon.awssdk.enhanced.dynamodb.TableSchema;
+
+public class DynamoDBServiceTest {
+
+    private DynamoDbTable<Contact> mockTable;
+    private DynamoDBService dynamoDBService;
+
+    @Before
+    public void setUp() {
+        AppConfig appConfig = new AppConfig();
+        mockTable = mock(DynamoDbTable.class);
+        DynamoDbEnhancedClient mockEnhancedClient = mock(DynamoDbEnhancedClient.class);
+        when(mockEnhancedClient.table(appConfig.getDynamodbTableName(), TableSchema.fromBean(Contact.class)))
+                .thenReturn(mockTable);
+
+        // Create a new DynamoDBService instance using the mock EnhancedClient
+        dynamoDBService = new DynamoDBService(mockEnhancedClient);
+    }
+
+    // @Test
+    // public void testWriteContact() {
+    // // Create a new Contact object and set its properties
+    // Contact contact = new Contact();
+    // contact.setName("John Smith");
+    // contact.setEmail("john.smith@example.com");
+    // contact.setPhone("555-1234");
+    // contact.setId("12345");
+
+    // when(mockTable.putItem(contact));
+
+    // // Call the writeContact() method and verify that it returns the expected
+    // Contact object
+    // dynamoDBService.writeContact("John Smith", "john.smith@example.com",
+    // "555-1234");
+    // assertEquals(Arrays.asList(contact), dynamoDBService.listContacts());
+    // }
+
+    // @Test
+    // public void testListContacts() {
+    //     DynamoDbTable<Contact> mockTable = mock(DynamoDbTable.class);
+
+    //     List<Contact> contacts = Arrays.asList(
+    //             new Contact("Alice", "alice@example.com", "555-1111", "11111"),
+    //             new Contact("Bob", "bob@example.com", "555-2222", "22222"),
+    //             new Contact("Charlie", "charlie@example.com", "555-3333", "33333"));
+
+    //     Iterator<Contact> iterator = contacts.iterator();
+    //     SdkIterable<Contact> mockSdkIterable = mock(SdkIterable.class);
+    //     when(mockSdkIterable.iterator()).thenReturn(iterator);
+    //     when(mockTable.scan().items()).thenReturn(mockSdkIterable);
+
+    //     DynamoDBService dynamoDBService = new DynamoDBService(mockTable);
+    //     assertEquals(contacts, dynamoDBService.listContacts());
+    // }
+}
